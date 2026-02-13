@@ -19,7 +19,11 @@ const gameBoard = (() => {
     ]
 
     const markSpot = (index, mark) => {
-        if (board[index] === 0) { board[index] = mark; }
+        if (board[index] === 0) { 
+            board[index] = mark; 
+            return true
+        }
+        return false;
     }
 
     const checkWin = (player) => {
@@ -36,9 +40,15 @@ const gameBoard = (() => {
         return false;
     }
 
-    const resetBoard = () => { board.fill(0); }
+    const isBoardFull = () => {
+        const full = arr => arr.every(i => i !== 0);
+        return full(board);
+    }
 
-    return { markSpot, checkWin, resetBoard }
+    const resetBoard = () => { board.fill(0); }
+    //const getBoard = () => { return board; }
+
+    return { markSpot, checkWin, resetBoard, isBoardFull/*, getBoard */}
 })();
 
 const createPlayer = (mark, name) => {
@@ -49,16 +59,39 @@ const createPlayer = (mark, name) => {
     return { getPlayerMark, getPlayerName }
 }
 
-const gameLogic = (() => {
-    let currentPlayer;
-    const setCurrentPlayer = (player) => { currentPlayer = player; }
-    const switchPlayer = (newPlayer) => { setCurrentPlayer(newPlayer); }
+const game = (player1, player2, gameBoard) => {
+    const playerOne = player1;
+    const playerTwo = player2;
+    const board = gameBoard;
+    let currentPlayer = playerOne;
+    let isGameOver = false;
 
-    const playRound = (index) => {
-        // obj.markSpot(index, mark)
-        // const isEnd = checkwin for current player
-        // if isend is false, switch players
+    const switchPlayer = () => {
+        if (currentPlayer === playerOne) {
+            currentPlayer = playerTwo;
+        } else if (currentPlayer === playerTwo) {
+            currentPlayer = playerOne;
+        }
     }
 
-    return { setCurrentPlayer, switchPlayer, playRound }
-})();
+    const playRound = (index) => {
+        if (!isGameOver) {
+            const isMarked = board.markSpot(index, currentPlayer.getPlayerMark());
+            if (isMarked) {
+                if (board.checkWin(currentPlayer.getPlayerMark())) {
+                    console.log(currentPlayer.getPlayerName() + " wins");
+                    isGameOver = true;
+                } else if (board.isBoardFull()) {
+                    console.log("Tie")
+                    isGameOver = true;
+                } else {
+                    switchPlayer();
+                }
+            }
+        }
+    }
+
+    const getGameStatus = () => { return isGameOver; }
+
+    return { switchPlayer, playRound, getGameStatus }
+}
