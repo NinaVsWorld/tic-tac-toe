@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    --grid-size: 500px;
+}
+
+.grid {
+    width: var(--grid-size);
+    height: var(--grid-size);
+    background-color: beige;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cell {
+    width: calc(var(--grid-size) / 3);
+    height: calc(var(--grid-size) / 3);
+    border: black 0.5px solid;
+    background-color: antiquewhite;
+}

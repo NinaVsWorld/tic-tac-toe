@@ -27,8 +27,7 @@ const gameBoard = (() => {
     }
 
     const checkWin = (player) => {
-        for (let i = 0; i < winningCombos.length; i++) {
-            const combo = winningCombos[i];
+        for (const combo of winningCombos) {
             const a = combo[0];
             const b = combo[1];
             const c = combo[2];
@@ -46,9 +45,8 @@ const gameBoard = (() => {
     }
 
     const resetBoard = () => { board.fill(0); }
-    //const getBoard = () => { return board; }
 
-    return { markSpot, checkWin, resetBoard, isBoardFull/*, getBoard */}
+    return { markSpot, checkWin, resetBoard, isBoardFull}
 })();
 
 const createPlayer = (mark, name) => {
@@ -79,10 +77,10 @@ const game = (player1, player2, gameBoard) => {
             const isMarked = board.markSpot(index, currentPlayer.getPlayerMark());
             if (isMarked) {
                 if (board.checkWin(currentPlayer.getPlayerMark())) {
-                    console.log(currentPlayer.getPlayerName() + " wins");
+                    //console.log(currentPlayer.getPlayerName() + " wins");
                     isGameOver = true;
                 } else if (board.isBoardFull()) {
-                    console.log("Tie")
+                    //console.log("Tie")
                     isGameOver = true;
                 } else {
                     switchPlayer();
@@ -92,6 +90,21 @@ const game = (player1, player2, gameBoard) => {
     }
 
     const getGameStatus = () => { return isGameOver; }
+    const getCurrentPlayer = () => { return currentPlayer; }
 
-    return { switchPlayer, playRound, getGameStatus }
+    return { switchPlayer, playRound, getGameStatus, getCurrentPlayer }
 }
+
+const displayGame = (() => {
+    const renderBoard = () => {
+        let index = 0;
+        const cells = document.querySelectorAll(".grid div");
+        for (const cell of cells) { 
+            cell.classList.add("cell");
+            cell.dataset.Index = index;
+            index++;
+        }
+    }
+
+    return { renderBoard }
+})();
