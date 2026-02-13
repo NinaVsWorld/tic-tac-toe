@@ -45,8 +45,9 @@ const gameBoard = (() => {
     }
 
     const resetBoard = () => { board.fill(0); }
+    const getBoard = () => { return board; }
 
-    return { markSpot, checkWin, resetBoard, isBoardFull}
+    return { markSpot, checkWin, resetBoard, isBoardFull, getBoard }
 })();
 
 const createPlayer = (mark, name) => {
@@ -77,7 +78,7 @@ const game = (player1, player2, gameBoard) => {
             const isMarked = board.markSpot(index, currentPlayer.getPlayerMark());
             if (isMarked) {
                 if (board.checkWin(currentPlayer.getPlayerMark())) {
-                    //console.log(currentPlayer.getPlayerName() + " wins");
+                    console.log(currentPlayer.getPlayerName() + " wins");
                     isGameOver = true;
                 } else if (board.isBoardFull()) {
                     //console.log("Tie")
@@ -96,9 +97,10 @@ const game = (player1, player2, gameBoard) => {
 }
 
 const displayGame = (() => {
+    const cells = document.querySelectorAll(".grid div");
+
     const renderBoard = () => {
         let index = 0;
-        const cells = document.querySelectorAll(".grid div");
         for (const cell of cells) { 
             cell.classList.add("cell");
             cell.dataset.Index = index;
@@ -106,5 +108,30 @@ const displayGame = (() => {
         }
     }
 
-    return { renderBoard }
+    const markSpot = () => {
+        for (const cell of cells) {
+            cell.addEventListener("click", () => fillCell(cell));
+        }
+    }
+
+    const fillCell = (cell) => {
+        if (!logic.getGameStatus()) {
+            const cellIndex = cell.dataset.Index;
+            // This is a problem
+            cell.textContent = logic.getCurrentPlayer().getPlayerMark();
+            logic.playRound(cellIndex);
+        }
+    }
+
+    const eraseBoard = () => {
+        
+    }
+
+    return { renderBoard, markSpot, disableBoard }
 })();
+
+const player1 = createPlayer("X", "Nina");
+const player2 = createPlayer("O", "Alfie");
+const board = gameBoard;
+const logic = game(player1, player2, board);
+const ui = displayGame;
