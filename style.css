@@ -61,3 +61,14 @@ body {
 .active {
     border: #00FF00 1px dashed;
 }
+
+button {
+    background-color: black;
+    padding: 10px;
+    color: #00FF00;
+    font-family: "Roboto Mono", monospace;
+    border-radius: 5px;
+    border: none;
+    border-left: #00FF00 1px solid;
+    border-right: #00FF00 1px solid;
+}
