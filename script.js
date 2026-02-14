@@ -102,8 +102,8 @@ const game = (player1, player2, gameBoard) => {
 
 const displayGame = (() => {
     const cells = document.querySelectorAll(".grid div");
-    const playerX = createPlayer("x", "Player X");
-    const playerO = createPlayer("o", "Player O");
+    const playerX = createPlayer("x", "Player x");
+    const playerO = createPlayer("o", "Player o");
     const logic = game(playerX, playerO, gameBoard);
 
     const renderBoard = () => {
@@ -125,13 +125,25 @@ const displayGame = (() => {
         if (!logic.getGameStatus()) {
             const cellIndex = cell.dataset.Index;
             const canMark = logic.playRound(cellIndex);
+            showCurrentPlayer();
             if (canMark) {
                 cell.textContent = gameBoard.getBoard()[cellIndex];
             }
-
             if (logic.getGameStatus()) {
                 document.querySelector(".result").textContent = logic.gameOverMessage();
             }
+        }
+    }
+
+    const showCurrentPlayer = () => {
+        const playerXUI = document.querySelector(".player-x")
+        const playerOUI = document.querySelector(".player-o")
+        if (logic.getCurrentPlayer() === playerX) {
+            playerXUI.classList.add("active");
+            playerOUI.classList.remove("active");
+        } else {
+            playerOUI.classList.add("active");
+            playerXUI.classList.remove("active");
         }
     }
 
@@ -148,6 +160,8 @@ const displayGame = (() => {
             cell.textContent = '';
         }
         document.querySelector(".result").textContent = '';
+        document.querySelector(".player-x").classList.remove("active");
+        document.querySelector(".player-o").classList.remove("active");
     }
 
     return { renderBoard, markSpot, eraseBoard }

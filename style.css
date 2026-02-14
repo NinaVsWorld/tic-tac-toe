@@ -41,8 +41,23 @@ body {
     font-size: 1.25rem;
 }
 
+.player-x,
+.player-o {
+    padding: 10px;
+}
+
 .data {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.result {
+    width: max-content;
+    height: 20px;
+    padding-top: 20px;
+}
+
+.active {
+    border: #00FF00 1px dashed;
 }
