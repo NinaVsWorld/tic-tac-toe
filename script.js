@@ -61,7 +61,6 @@ const createPlayer = (mark, name) => {
 const game = (player1, player2, gameBoard) => {
     const playerOne = player1;
     const playerTwo = player2;
-    const board = gameBoard;
     let currentPlayer = playerOne;
     let isGameOver = false;
 
@@ -74,26 +73,28 @@ const game = (player1, player2, gameBoard) => {
     }
 
     const playRound = (index) => {
-        if (!isGameOver) {
-            const isMarked = board.markSpot(index, currentPlayer.getPlayerMark());
-            if (isMarked) {
-                if (board.checkWin(currentPlayer.getPlayerMark())) {
-                    console.log(currentPlayer.getPlayerName() + " wins");
-                    isGameOver = true;
-                } else if (board.isBoardFull()) {
-                    //console.log("Tie")
-                    isGameOver = true;
-                } else {
-                    switchPlayer();
-                }
-            }
+        if (isGameOver) { return false; }
+        const isMarked = gameBoard.markSpot(index, currentPlayer.getPlayerMark());
+        if (!isMarked) { return false; }
+
+        if (gameBoard.checkWin(currentPlayer.getPlayerMark())) {
+            console.log(currentPlayer.getPlayerName() + " wins");
+            isGameOver = true;
+            return true;
+        } else if (gameBoard.isBoardFull()) {
+            console.log("Tie")
+            isGameOver = true;
+            return true;
+        } else {
+            switchPlayer();
+            return true;
         }
     }
 
     const getGameStatus = () => { return isGameOver; }
-    const getCurrentPlayer = () => { return currentPlayer; }
+    const resetGameStatus = () => { isGameOver = false };
 
-    return { switchPlayer, playRound, getGameStatus, getCurrentPlayer }
+    return { playRound, getGameStatus, resetGameStatus }
 }
 
 const displayGame = (() => {
@@ -117,21 +118,33 @@ const displayGame = (() => {
     const fillCell = (cell) => {
         if (!logic.getGameStatus()) {
             const cellIndex = cell.dataset.Index;
-            // This is a problem
-            cell.textContent = logic.getCurrentPlayer().getPlayerMark();
-            logic.playRound(cellIndex);
+            const canMark = logic.playRound(cellIndex);
+            if (canMark) {
+                cell.textContent = gameBoard.getBoard()[cellIndex];
+            }
         }
     }
 
     const eraseBoard = () => {
-        
+        document.querySelector("button").addEventListener("click", () => {
+            clearBoard();
+            gameBoard.resetBoard();
+            logic.resetGameStatus();
+        })
     }
 
-    return { renderBoard, markSpot, disableBoard }
+    const clearBoard = () => {
+        for (const cell of cells) {
+            cell.textContent = '';
+        }
+    }
+
+    return { renderBoard, markSpot, eraseBoard }
 })();
 
 const player1 = createPlayer("X", "Nina");
 const player2 = createPlayer("O", "Alfie");
-const board = gameBoard;
-const logic = game(player1, player2, board);
-const ui = displayGame;
+const logic = game(player1, player2, gameBoard);
+displayGame.renderBoard();
+displayGame.markSpot();
+displayGame.eraseBoard();
