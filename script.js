@@ -63,6 +63,7 @@ const game = (player1, player2, gameBoard) => {
     const playerTwo = player2;
     let currentPlayer = playerOne;
     let isGameOver = false;
+    let gameOverMsg;
 
     const switchPlayer = () => {
         if (currentPlayer === playerOne) {
@@ -78,11 +79,11 @@ const game = (player1, player2, gameBoard) => {
         if (!isMarked) { return false; }
 
         if (gameBoard.checkWin(currentPlayer.getPlayerMark())) {
-            console.log(currentPlayer.getPlayerName() + " wins");
+            gameOverMsg = currentPlayer.getPlayerName() + " wins";
             isGameOver = true;
             return true;
         } else if (gameBoard.isBoardFull()) {
-            console.log("Tie")
+            gameOverMsg = "Tie"
             isGameOver = true;
             return true;
         } else {
@@ -92,15 +93,17 @@ const game = (player1, player2, gameBoard) => {
     }
 
     const getGameStatus = () => { return isGameOver; }
-    const resetGameStatus = () => { isGameOver = false };
+    const resetGameStatus = () => { isGameOver = false; }
+    const getCurrentPlayer = () => { return currentPlayer; }
+    const gameOverMessage = () => { return gameOverMsg; }
 
-    return { playRound, getGameStatus, resetGameStatus }
+    return { playRound, getGameStatus, resetGameStatus, getCurrentPlayer, gameOverMessage }
 }
 
 const displayGame = (() => {
     const cells = document.querySelectorAll(".grid div");
-    const playerX = createPlayer("X", "Player X");
-    const playerO = createPlayer("O", "Player O");
+    const playerX = createPlayer("x", "Player X");
+    const playerO = createPlayer("o", "Player O");
     const logic = game(playerX, playerO, gameBoard);
 
     const renderBoard = () => {
@@ -125,14 +128,12 @@ const displayGame = (() => {
             if (canMark) {
                 cell.textContent = gameBoard.getBoard()[cellIndex];
             }
+
+            if (logic.getGameStatus()) {
+                document.querySelector(".result").textContent = logic.gameOverMessage();
+            }
         }
     }
-
-    /*const displayWin = () => {
-        if (logic.getGameStatus()) {
-            document.querySelector(".result").textContent = logic.currentPlayer().getPlayerName() + "wins";
-        }
-    }*/
 
     const eraseBoard = () => {
         document.querySelector("button").addEventListener("click", () => {
@@ -146,12 +147,12 @@ const displayGame = (() => {
         for (const cell of cells) {
             cell.textContent = '';
         }
+        document.querySelector(".result").textContent = '';
     }
 
-    return { renderBoard, markSpot, eraseBoard/*, displayWin*/ }
+    return { renderBoard, markSpot, eraseBoard }
 })();
 
 displayGame.renderBoard();
 displayGame.markSpot();
-//displayGame.displayWin();
 displayGame.eraseBoard();

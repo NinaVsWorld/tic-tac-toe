@@ -12,12 +12,14 @@ body {
     align-items: center;
     --grid-size: 500px;
     gap: 50px;
+    background-color: black;
+    color: #00FF00;
+    font-family: "Roboto Mono", monospace;
 }
 
 .grid {
     width: var(--grid-size);
     height: var(--grid-size);
-    background-color: beige;
     display: flex;
     flex-wrap: wrap;
 }
@@ -25,16 +27,22 @@ body {
 .cell {
     width: calc(var(--grid-size) / 3);
     height: calc(var(--grid-size) / 3);
-    border: black 0.5px solid;
-    background-color: antiquewhite;
-}
-
-.cell:hover {
-    background-color: aquamarine;
+    border: #00FF00 1px dashed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
 }
 
 .players {
     display: flex;
     justify-content: center;
     gap: 30px;
+    font-size: 1.25rem;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
