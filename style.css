@@ -7,9 +7,11 @@
 body {
     height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     --grid-size: 500px;
+    gap: 50px;
 }
 
 .grid {
@@ -29,4 +31,10 @@ body {
 
 .cell:hover {
     background-color: aquamarine;
+}
+
+.players {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
 }

@@ -99,6 +99,9 @@ const game = (player1, player2, gameBoard) => {
 
 const displayGame = (() => {
     const cells = document.querySelectorAll(".grid div");
+    const playerX = createPlayer("X", "Player X");
+    const playerO = createPlayer("O", "Player O");
+    const logic = game(playerX, playerO, gameBoard);
 
     const renderBoard = () => {
         let index = 0;
@@ -125,6 +128,12 @@ const displayGame = (() => {
         }
     }
 
+    /*const displayWin = () => {
+        if (logic.getGameStatus()) {
+            document.querySelector(".result").textContent = logic.currentPlayer().getPlayerName() + "wins";
+        }
+    }*/
+
     const eraseBoard = () => {
         document.querySelector("button").addEventListener("click", () => {
             clearBoard();
@@ -139,12 +148,10 @@ const displayGame = (() => {
         }
     }
 
-    return { renderBoard, markSpot, eraseBoard }
+    return { renderBoard, markSpot, eraseBoard/*, displayWin*/ }
 })();
 
-const player1 = createPlayer("X", "Nina");
-const player2 = createPlayer("O", "Alfie");
-const logic = game(player1, player2, gameBoard);
 displayGame.renderBoard();
 displayGame.markSpot();
+//displayGame.displayWin();
 displayGame.eraseBoard();
